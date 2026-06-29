@@ -1,8 +1,16 @@
 import type { Metadata } from 'next';
+import { Josefin_Sans } from 'next/font/google';
+
 import Navigation from '@/app/_components/Navigation';
 import Logo from '@/app/_components/Logo';
 
 import './_styles/globals.css';
+import Header from './_components/Header';
+
+const josefin = Josefin_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -20,13 +28,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-primary-950 text-gray-50 min-h-screen">
-        <header>
-          <Logo />
-          <Navigation />
-        </header>
-        <main>{children}</main>
-        <footer>Copyright by the Wild Oasis</footer>
+      <body
+        className={`${josefin.className} bg-primary-950 text-gray-50 min-h-screen flex flex-col`}
+      >
+        <Header />
+        <div className="flex-1 px-8 py-12">
+          <main className="max-w-7xl bg-accent-300 mx-auto text-center">{children}</main>
+        </div>
       </body>
     </html>
   );
