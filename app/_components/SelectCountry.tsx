@@ -8,14 +8,14 @@ async function SelectCountry({
   id,
   className,
 }: {
-  defaultCountry: object;
+  defaultCountry: string;
   name: string;
   id: string;
   className: string;
 }) {
-  // const countries = await getCountries();
-  const countries = [];
-  const flag = countries.find((country) => country.name === defaultCountry)?.flag ?? '';
+  const countries = await getCountries();
+  const flag =
+    countries.find((country) => country.names.common === defaultCountry)?.flag.emoji ?? '';
 
   return (
     <select
@@ -27,8 +27,8 @@ async function SelectCountry({
     >
       <option value="">Select country...</option>
       {countries.map((c) => (
-        <option key={c.name} value={`${c.name}%${c.flag}`}>
-          {c.name}
+        <option key={c.names.common} value={`${c.names.common}%${c.flag.emoji}`}>
+          {c.names.common}
         </option>
       ))}
     </select>
