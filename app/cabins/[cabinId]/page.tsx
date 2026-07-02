@@ -1,11 +1,15 @@
 import { getCabin } from '@/app/_lib/data-service';
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 
 // fetch calls get cached for the page
 export async function generateMetadata({ params }: PageProps<'/cabins/[cabinId]'>) {
   const { cabinId } = await params;
-  const { name } = await getCabin(cabinId);
+  const cabin = await getCabin(cabinId);
+  if (!cabin) notFound();
+
+  const { name } = cabin;
 
   return {
     title: `Cabin ${name}`,
@@ -16,6 +20,7 @@ export async function generateMetadata({ params }: PageProps<'/cabins/[cabinId]'
 export default async function Page({ params }: PageProps<'/cabins/[cabinId]'>) {
   const { cabinId } = await params;
   const cabin = await getCabin(cabinId);
+  if (!cabin) notFound();
 
   const {
     id,
@@ -35,7 +40,7 @@ export default async function Page({ params }: PageProps<'/cabins/[cabinId]'>) {
         </div>
 
         <div>
-          <h3 className="text-accent-100 font-black text-7xl mb-5 translate-x-[-254px] bg-primary-950 p-6 pb-1 w-[150%]">
+          <h3 className="text-accent-100 font-black text-7xl mb-5 -translate-x-63.5 bg-primary-950 p-6 pb-1 w-[150%]">
             Cabin {name}
           </h3>
 
