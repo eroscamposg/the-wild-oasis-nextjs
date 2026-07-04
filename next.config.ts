@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // export: for fully static sites
+  output: 'export',
 };
 
 export default nextConfig;

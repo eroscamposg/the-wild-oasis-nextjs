@@ -1,4 +1,4 @@
-import { Cabin } from '@/types/cabin';
+import { Cabin } from '@/types/Cabin';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
 
