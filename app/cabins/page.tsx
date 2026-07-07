@@ -3,6 +3,7 @@ import CabinList from '../_components/CabinList';
 import { Suspense } from 'react';
 import Spinner from '../_components/Spinner';
 import Filter from '../_components/Filter';
+import ReservationReminder from '../_components/ReservationReminder';
 
 // Doesnt apply anymore because we are using (searchParams), which is used on runtime, making the page dynamic
 // export const revalidate = 3600
@@ -38,6 +39,7 @@ export default async function Page({
       {/* key needed because of default behaviour of SUSPENSE with route changes. Navigation in NEXTJS is always wrapped in a React transition. In transitions, React doesnt hide the content that has already been rendered  earlier */}
       <Suspense fallback={<Spinner />} key={filter}>
         <CabinList filter={filter} />
+        <ReservationReminder />
       </Suspense>
     </div>
   );
