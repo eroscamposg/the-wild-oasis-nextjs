@@ -2,8 +2,8 @@
 
 import { Cabin } from '@/types/Cabin';
 import { useReservation } from './ReservationContext';
-import { User } from '../_lib/auth-client';
 import Image from 'next/image';
+import { User } from 'next-auth';
 
 function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
   const { range } = useReservation();
@@ -21,7 +21,7 @@ function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
             referrerPolicy="no-referrer"
             className="h-8 rounded-full"
             src={user.image ?? ''}
-            alt={user.name}
+            alt={user.name ?? ''}
           />
           <p>{user.name}</p>
         </div>

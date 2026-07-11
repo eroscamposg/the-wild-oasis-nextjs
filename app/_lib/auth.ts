@@ -1,17 +1,26 @@
-import { betterAuth } from 'better-auth';
+import NextAuth, { type NextAuthConfig } from 'next-auth';
+import Google from 'next-auth/providers/google';
 
-export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL,
-  socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+const authConfig: NextAuthConfig = {
+  providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+    }),
+  ],
+  callbacks: {
+    authorized({ auth, request }) {
+      return !!auth?.user;
     },
   },
-  emailAndPassword: {
-    enabled: true,
+  pages: {
+    signIn: '/login',
   },
-});
+};
 
-export type Session = typeof auth.$Infer.Session.session;
-export type User = typeof auth.$Infer.Session.user;
+export const {
+  auth,
+  signIn,
+  signOut,
+  handlers: { GET, POST },
+} = NextAuth(authConfig);

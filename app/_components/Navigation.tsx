@@ -4,11 +4,7 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 
 export default async function Navigation() {
-  const data = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  const { user } = data ?? {};
+  const session = await auth();
 
   return (
     <nav className="z-10 text-xl">
@@ -24,15 +20,15 @@ export default async function Navigation() {
           </Link>
         </li>
         <li>
-          {user?.image ? (
+          {session?.user?.image ? (
             <Link
               href="/account"
               className="hover:text-accent-400 transition-colors flex items-center gap-4"
             >
               <Image
                 className="h-8 rounded-full"
-                src={user.image}
-                alt={user.name}
+                src={session.user.image}
+                alt={session.user.name ?? 'user image'}
                 width={32}
                 height={32}
                 referrerPolicy="no-referrer"

@@ -1,16 +1,13 @@
-import { NextResponse, type NextRequest } from 'next/server';
-import { auth } from './app/_lib/auth';
-import { headers } from 'next/headers';
+/*import { NextResponse } from "next/server";
 
-export async function proxy(request: NextRequest) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+export function middleware(request) {
+  console.log(request);
 
-  if (!session) return NextResponse.redirect(new URL('/login', request.url));
+  return NextResponse.redirect(new URL("/about", request.url));
+}*/
 
-  return NextResponse.next();
-}
+import { auth } from '@/app/_lib/auth';
+export const proxy = auth;
 
 export const config = {
   matcher: ['/account'],

@@ -1,16 +1,13 @@
-import type { Metadata } from 'next';
 import { auth } from '../_lib/auth';
-import { headers } from 'next/headers';
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'Guest area',
 };
 
-export default async function AccountPage() {
-  const data = await auth.api.getSession({
-    headers: await headers(),
-  });
-  const firstName = data?.user.name.split(' ').at(0);
+export default async function Page() {
+  const session = await auth();
 
-  return <div className="font-semibold text-2xl text-accent-400 mb-7">Welcome, {firstName}</div>;
+  const firstName = session?.user?.name?.split(' ').at(0);
+
+  return <h2 className="font-semibold text-2xl text-accent-400 mb-7">Welcome, {firstName}</h2>;
 }
