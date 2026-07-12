@@ -1,15 +1,12 @@
 export type Booking = {
   id: string;
-  guest_id: string;
+  cabin_id: number;
+  guest_id: number;
   start_date: string;
   end_date: string;
   num_nights: number;
   total_price: number;
   num_guests: number;
-  status: string;
+  status?: string;
   created_at: string;
-  cabins: {
-    name: string;
-    image: string;
-  };
 };
