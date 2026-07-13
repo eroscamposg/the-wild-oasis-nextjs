@@ -137,7 +137,7 @@ export async function getSettings() {
 export async function getCountries(): Promise<Country[]> {
   try {
     const res = await fetch(
-      'https://api.restcountries.com/countries/v5?limit=100&response_fields=names.common,flag.emoji',
+      'https://api.restcountries.com/countries/v5?limit=100&response_fields=names.common,codes.alpha_2',
       {
         headers: { Authorization: process.env.REST_COUNTRIES_KEY ?? '' },
       },

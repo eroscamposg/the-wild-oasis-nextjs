@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { signIn, signOut } from './auth';
 import { getRequiredSession } from './auth-helper';
 import { supabase } from './supabase';
@@ -9,9 +10,13 @@ export async function updateGuest(formData: FormData) {
 
   const national_id = formData.get('national_id') as string;
   const nationalityField = formData.get('nationality') as string;
-  const [nationality, country_flag] = nationalityField.split('%');
+  const [nationality, countryAlpha] = nationalityField.split('%');
 
   if (!/^\d{8}$/.test(national_id)) throw new Error('Please provide a valid ID');
+
+  let country_flag = '';
+  if (countryAlpha)
+    country_flag = `https://flags.restcountries.com/v5/w160/${countryAlpha.toLocaleLowerCase()}.png`;
 
   const updateData = {
     national_id,
@@ -27,6 +32,8 @@ export async function updateGuest(formData: FormData) {
     .eq('id', session.user.guestId);
 
   if (error) throw new Error('Guest could not be updated');
+
+  revalidatePath('/account/profile');
 }
 
 export async function signInAction() {

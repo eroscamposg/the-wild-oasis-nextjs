@@ -4,6 +4,7 @@ import { Guest } from '@/types/Guest';
 import { ReactNode, useState } from 'react';
 import { updateGuest } from '../_lib/actions';
 import SelectCountry from './SelectCountry';
+import { useFormStatus } from 'react-dom';
 
 export default function UpdateProfileForm({
   children,
@@ -46,7 +47,7 @@ export default function UpdateProfileForm({
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label htmlFor="nationality">Where are you from?</label>
-          <img src={countryFlag} alt="Country flag" className="h-5 rounded-sm" />
+          {countryFlag && <img src={countryFlag} alt="Country flag" className="h-5 rounded-sm" />}
         </div>
 
         {children}
@@ -68,10 +69,21 @@ export default function UpdateProfileForm({
       </div>
 
       <div className="flex justify-end items-center gap-6">
-        <button className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300 cursor-pointer">
-          Update profile
-        </button>
+        <Button />
       </div>
     </form>
+  );
+}
+
+function Button() {
+  // NOTE: To use useFormStatus, the component must be inside a form
+  const { pending } = useFormStatus();
+  return (
+    <button
+      className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300 cursor-pointer"
+      disabled={pending}
+    >
+      {pending ? 'Updating...' : 'Update profile'}
+    </button>
   );
 }
