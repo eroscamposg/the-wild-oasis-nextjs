@@ -10,3 +10,10 @@ export type Booking = {
   status?: string;
   created_at: string;
 };
+
+export type BookingWithCabin = Booking & {
+  cabins: {
+    name: string;
+    image: string;
+  };
+};

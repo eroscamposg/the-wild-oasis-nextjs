@@ -2,7 +2,7 @@ import type { Session } from 'next-auth';
 import { auth } from './auth';
 
 type AuthenticatedSession = Session & {
-  user: Session['user'] & { email: string; id: number };
+  user: Session['user'] & { email: string; id: number; guestId: number };
 };
 
 export async function getRequiredSession(): Promise<AuthenticatedSession> {

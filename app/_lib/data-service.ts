@@ -3,7 +3,7 @@ import { supabase } from './supabase';
 import { Country } from '@/types/Country';
 import { Cabin } from '@/types/Cabin';
 import { Guest } from '@/types/Guest';
-import { Booking } from '@/types/Booking';
+import { Booking, BookingWithCabin } from '@/types/Booking';
 
 /////////////
 // GET
@@ -57,13 +57,6 @@ export async function getGuest(email: string): Promise<Guest> {
   return data;
 }
 
-type BookingWithCabins = Booking & {
-  cabins: Array<{
-    name: string;
-    image: string;
-  }>;
-};
-
 export async function getBooking(id: string): Promise<Booking> {
   const { data, error, count } = await supabase.from('bookings').select('*').eq('id', id).single();
 
@@ -75,8 +68,8 @@ export async function getBooking(id: string): Promise<Booking> {
   return data;
 }
 
-export async function getBookings(guestId: string): Promise<BookingWithCabins[]> {
-  const { data, error, count } = await supabase
+export async function getBookings(guestId: string): Promise<BookingWithCabin[]> {
+  const { data: bookings, error } = await supabase
     .from('bookings')
     // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
     .select(
@@ -90,7 +83,13 @@ export async function getBookings(guestId: string): Promise<BookingWithCabins[]>
     throw new Error('Bookings could not get loaded');
   }
 
-  return data;
+  const formattedData = bookings?.map((booking) => ({
+    ...booking,
+    // Safely grab the first element if profiles returns as an array
+    cabins: Array.isArray(booking.cabins) ? booking.cabins[0] : booking.cabins,
+  }));
+
+  return formattedData;
 }
 
 export async function getBookedDatesByCabinId(cabinId: string) {
