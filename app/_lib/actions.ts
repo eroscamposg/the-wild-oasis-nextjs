@@ -43,3 +43,18 @@ export async function signInAction() {
 export async function signOutAction() {
   await signOut({ redirectTo: '/' });
 }
+
+export async function deleteReservation(bookingId: number) {
+  const session = await getRequiredSession();
+
+  // NOTE: guestId is used to make sure only users can delet etheir own bookings (security)
+  const { data, error } = await supabase
+    .from('bookings')
+    .delete()
+    .eq('id', bookingId)
+    .eq('guest_id', session.user.guestId);
+
+  if (error) throw new Error('Booking could not be deleted');
+
+  revalidatePath('/account/reservations');
+}
