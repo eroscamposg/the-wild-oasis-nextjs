@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { signIn, signOut } from './auth';
 import { getRequiredSession } from './auth-helper';
 import { supabase } from './supabase';
+import { redirect } from 'next/navigation';
 
 export async function updateGuest(formData: FormData) {
   const session = await getRequiredSession();
@@ -47,8 +48,8 @@ export async function signOutAction() {
 export async function deleteReservation(bookingId: number) {
   const session = await getRequiredSession();
 
-  // NOTE: guestId is used to make sure only users can delet etheir own bookings (security)
-  const { data, error } = await supabase
+  // NOTE: guestId is used to make sure only users can delete their own bookings (security)
+  const { error } = await supabase
     .from('bookings')
     .delete()
     .eq('id', bookingId)
@@ -57,4 +58,32 @@ export async function deleteReservation(bookingId: number) {
   if (error) throw new Error('Booking could not be deleted');
 
   revalidatePath('/account/reservations');
+}
+
+export async function editReservation(formData: FormData) {
+  const session = await getRequiredSession();
+
+  const updateData = {
+    num_guests: Number(formData.get('num_guests')),
+    observations: formData.get('observations')?.slice(0, 1000),
+  };
+
+  const bookingId = Number(formData.get('booking_id'));
+
+  console.log('updateData: ', updateData);
+  console.log('bookingId: ', bookingId);
+
+  const { error } = await supabase
+    .from('bookings')
+    .update(updateData)
+    .eq('id', bookingId)
+    .eq('guest_id', session.user.guestId);
+
+  if (error) {
+    console.error(error);
+    throw new Error('Booking could not be updated');
+  }
+
+  revalidatePath('/account/reservations');
+  redirect(`/account/reservations`);
 }

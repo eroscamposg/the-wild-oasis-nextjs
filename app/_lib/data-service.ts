@@ -8,7 +8,7 @@ import { Booking, BookingWithCabin } from '@/types/Booking';
 /////////////
 // GET
 
-export async function getCabin(id: string): Promise<Cabin> {
+export async function getCabin(id: number): Promise<Cabin> {
   const { data, error } = await supabase.from('cabins').select('*').eq('id', id).single();
 
   // For testing
@@ -21,7 +21,7 @@ export async function getCabin(id: string): Promise<Cabin> {
   return data;
 }
 
-export async function getCabinPrice(id: string) {
+export async function getCabinPrice(id: number) {
   const { data, error } = await supabase
     .from('cabins')
     .select('regular_price, discount')
@@ -57,7 +57,7 @@ export async function getGuest(email: string): Promise<Guest> {
   return data;
 }
 
-export async function getBooking(id: string): Promise<Booking> {
+export async function getBooking(id: number): Promise<Booking> {
   const { data, error, count } = await supabase.from('bookings').select('*').eq('id', id).single();
 
   if (error) {
@@ -68,7 +68,7 @@ export async function getBooking(id: string): Promise<Booking> {
   return data;
 }
 
-export async function getBookings(guestId: string): Promise<BookingWithCabin[]> {
+export async function getBookings(guestId: number): Promise<BookingWithCabin[]> {
   const { data: bookings, error } = await supabase
     .from('bookings')
     // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
@@ -92,7 +92,7 @@ export async function getBookings(guestId: string): Promise<BookingWithCabin[]> 
   return formattedData;
 }
 
-export async function getBookedDatesByCabinId(cabinId: string) {
+export async function getBookedDatesByCabinId(cabinId: number) {
   const todayDate = new Date();
   todayDate.setUTCHours(0, 0, 0, 0);
   const todayISO = todayDate.toISOString();

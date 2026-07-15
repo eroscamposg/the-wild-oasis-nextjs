@@ -7,6 +7,7 @@ export type Booking = {
   num_nights: number;
   total_price: number;
   num_guests: number;
+  observations?: string;
   status?: string;
   created_at: string;
 };

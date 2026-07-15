@@ -6,8 +6,8 @@ export async function GET(request: NextRequest, ctx: RouteContext<'/api/cabins/[
 
   try {
     const [cabin, bookedDates] = await Promise.all([
-      getCabin(cabinId),
-      getBookedDatesByCabinId(cabinId),
+      getCabin(Number(cabinId)),
+      getBookedDatesByCabinId(Number(cabinId)),
     ]);
 
     return Response.json({ cabin, bookedDates });
