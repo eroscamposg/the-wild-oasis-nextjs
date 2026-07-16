@@ -20,6 +20,8 @@ function ReservationForm({ cabin, user }: { cabin: Cabin; user: User }) {
             // Important to display google profile images
             referrerPolicy="no-referrer"
             className="h-8 rounded-full"
+            width={32}
+            height={32}
             src={user.image ?? ''}
             alt={user.name ?? ''}
           />

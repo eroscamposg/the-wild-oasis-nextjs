@@ -92,7 +92,7 @@ export async function getBookings(guestId: number): Promise<BookingWithCabin[]> 
   return formattedData;
 }
 
-export async function getBookedDatesByCabinId(cabinId: number) {
+export async function getBookedDatesByCabinId(cabinId: number): Promise<Date[]> {
   const todayDate = new Date();
   todayDate.setUTCHours(0, 0, 0, 0);
   const todayISO = todayDate.toISOString();
@@ -113,8 +113,8 @@ export async function getBookedDatesByCabinId(cabinId: number) {
   const bookedDates = data
     .map((booking) => {
       return eachDayOfInterval({
-        start: new Date(booking.startDate),
-        end: new Date(booking.endDate),
+        start: new Date(booking.start_date),
+        end: new Date(booking.end_date),
       });
     })
     .flat();

@@ -8,7 +8,7 @@ import { Suspense } from 'react';
 // fetch calls get cached for the page
 export async function generateMetadata({ params }: PageProps<'/cabins/[cabinId]'>) {
   const { cabinId } = await params;
-  const cabin = await getCabin(cabinId);
+  const cabin = await getCabin(Number(cabinId));
   if (!cabin) notFound();
 
   const { name } = cabin;
@@ -31,7 +31,7 @@ export async function generateStaticParams() {
 // Special type to auto generate types of params
 export default async function Page({ params }: PageProps<'/cabins/[cabinId]'>) {
   const { cabinId } = await params;
-  const cabin = await getCabin(cabinId);
+  const cabin = await getCabin(Number(cabinId));
 
   if (!cabin) notFound();
 

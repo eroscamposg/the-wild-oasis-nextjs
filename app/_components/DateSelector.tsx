@@ -2,19 +2,26 @@
 
 import { Cabin } from '@/types/Cabin';
 import { Settings } from '@/types/Settings';
-import { isWithinInterval } from 'date-fns';
+import { differenceInDays, isPast, isSameDay, isWithinInterval } from 'date-fns';
 import { useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { useReservation } from './ReservationContext';
+import { DateRange } from 'react-day-picker';
 
-// function isAlreadyBooked(range, datesArr) {
-//   return (
-//     range.from &&
-//     range.to &&
-//     datesArr.some((date) => isWithinInterval(date, { start: range.from, end: range.to }))
-//   );
-// }
+function isAlreadyBooked(range: DateRange | undefined, datesArr: Date[]) {
+  if (!range || !range.from || !range.to) {
+    return false;
+  }
+
+  const { to, from } = range;
+
+  return (
+    range.from &&
+    range.to &&
+    datesArr.some((date) => isWithinInterval(date, { start: from, end: to }))
+  );
+}
 
 function DateSelector({
   settings,
@@ -27,13 +34,19 @@ function DateSelector({
 }) {
   const { min_booking_length: minBookingLength, max_booking_length: maxBookingLength } = settings;
 
+  // Dates
   const { range, setRange, resetRange } = useReservation();
 
-  // CHANGE
-  const regularPrice = 23;
-  const discount = 23;
-  const numNights = 23;
-  const cabinPrice = 23;
+  // const displayRange = isAlreadyBooked(range, bookedDates) ? undefined : range;
+  // Num nights
+  const { from, to } = range ?? {};
+  const numNights = from && to ? differenceInDays(to, from) : 0;
+
+  // Other cabin data
+  const { regular_price: regularPrice, discount } = cabin;
+
+  // Cabin price
+  const cabinPrice = numNights * (regularPrice - discount);
 
   // SETTINGS
   const endMonth = new Date(new Date().getFullYear() + 5, 11);
@@ -52,6 +65,11 @@ function DateSelector({
         hidden={{ before: new Date() }}
         captionLayout="dropdown"
         numberOfMonths={2}
+        disabled={(curDate) =>
+          isPast(curDate) || bookedDates.some((date) => isSameDay(date, curDate))
+        }
+        // NOTE: Save us from using isAlreadyBooked
+        excludeDisabled
       />
 
       <div className="flex items-center justify-between px-8 bg-accent-500 text-primary-800 h-18">
@@ -82,7 +100,7 @@ function DateSelector({
 
         {range?.from || range?.to ? (
           <button
-            className="border border-primary-800 py-2 px-4 text-sm font-semibold"
+            className="border border-primary-800 py-2 px-4 text-sm font-semibold cursor-pointer"
             onClick={() => resetRange()}
           >
             Clear
