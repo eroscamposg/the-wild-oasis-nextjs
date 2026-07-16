@@ -48,6 +48,8 @@ export async function signOutAction() {
 export async function deleteReservation(bookingId: number) {
   const session = await getRequiredSession();
 
+  // throw new Error('Test error for optimistic');
+
   // NOTE: guestId is used to make sure only users can delete their own bookings (security)
   const { error } = await supabase
     .from('bookings')

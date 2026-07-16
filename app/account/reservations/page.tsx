@@ -1,7 +1,6 @@
-import ReservationCard from '@/app/_components/ReservationCard';
+import ReservationsList from '@/app/_components/ReservationsList';
 import { getRequiredSession } from '@/app/_lib/auth-helper';
 import { getBookings } from '@/app/_lib/data-service';
-import { Booking } from '@/types/Booking';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,8 +10,6 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getRequiredSession();
   const bookings = await getBookings(session.user.guestId);
-
-  // CHANGE
 
   return (
     <div>
@@ -26,11 +23,7 @@ export default async function Page() {
           </a>
         </p>
       ) : (
-        <ul className="space-y-6">
-          {bookings.map((booking) => (
-            <ReservationCard booking={booking} key={booking.id} />
-          ))}
-        </ul>
+        <ReservationsList reservations={bookings} />
       )}
     </div>
   );
